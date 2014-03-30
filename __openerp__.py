@@ -13,6 +13,7 @@
     ],
     'data': [
         'partner.xml',
+        'tax.xml',
     ],
     'demo': [
     ],
