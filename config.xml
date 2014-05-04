@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <openerp>
     <data>
-        <record id="edi_flow_invoice_outgoing" model="clubit.tools.edi.flow">
+        <record id="expertm_flow_invoice_outgoing" model="clubit.tools.edi.flow">
             <field name="name">InvoiceXML(out)</field>
             <field name="direction">out</field>
             <field name="model">account.invoice</field>
-            <field name="method">send_edi_out</field>
-            <field name="partner_resolver">edi_partner_resolver</field>
+            <field name="method">send_expertm_out</field>
+            <field name="partner_resolver">expertm_partner_resolver</field>
         </record>
     </data>
 </openerp>

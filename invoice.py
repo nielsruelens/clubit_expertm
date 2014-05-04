@@ -12,10 +12,10 @@ class account_invoice(osv.Model):
     _inherit = "account.invoice"
 
 
-    def edi_partner_resolver(self, cr, uid, ids, context):
+    def expertm_partner_resolver(self, cr, uid, ids, context):
         raise osv.except_osv(_('Warning!'), _("Resolving is not supported for this flow."))
 
-    def send_edi_out(self, cr, uid, items, context=None):
+    def send_expertm_out(self, cr, uid, items, context=None):
         ''' account.invoice:send_edi_out()
             ------------------------------
             This method will perform the export of an invoice.
@@ -79,7 +79,7 @@ class account_invoice(osv.Model):
 
         # Add the XML structure to the EDI document
         # -----------------------------------------
-        result = edi_db.create_from_content(cr, uid, 'invoices_to_expertm', root, items[0]['partner_id'], 'account.invoice', 'send_edi_out', type='XML')
+        result = edi_db.create_from_content(cr, uid, 'invoices_to_expertm', root, items[0]['partner_id'], 'account.invoice', 'send_expertm_out', type='XML')
         if result != True:
             raise osv.except_osv(_('Error!'), _("Something went wrong while trying to create one of the EDI documents. Please contact your system administrator. Error given: {!s}").format(result))
 
