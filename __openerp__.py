@@ -12,8 +12,11 @@
         'clubit_tools',
     ],
     'data': [
-        'partner.xml',
+        'config.xml',
         'tax.xml',
+        'partner.xml',
+        'category.xml',
+        'wizard/outgoing_invoice.xml',
     ],
     'demo': [
     ],

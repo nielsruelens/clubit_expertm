@@ -1,9 +1,9 @@
 from openerp.osv import osv, fields
 from openerp.tools.translate import _
 
-class account_tax(osv.Model):
-    _name = "account.tax"
-    _inherit = "account.tax"
+class account_tax_code(osv.Model):
+    _name = "account.tax.code"
+    _inherit = "account.tax.code"
     _columns = {
         'ventil_code': fields.selection([('1','0%'),
                                          ('2','6%'),

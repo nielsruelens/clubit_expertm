@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+        <record id="view_product_category_form" model="ir.ui.view">
+            <field name="name">view.product.category.form</field>
+            <field name="model">product.category</field>
+            <field name="inherit_id" ref="account.view_category_property_form"/>
+            <field name="arch" type="xml">
+
+				<xpath expr="//group[@name = 'account_property']" position="attributes">
+					<attribute name="colspan">4</attribute>
+				</xpath>
+
+                <field name="property_account_expense_categ" position="after">
+                    <field name="refund_account"/>
+                </field>
+            </field>
+        </record>
+    </data>
+</openerp>
