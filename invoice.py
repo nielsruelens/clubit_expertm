@@ -1,6 +1,7 @@
 from openerp.osv import osv
 from openerp.tools.translate import _
 import re
+import datetime
 try:
     import xml.etree.cElementTree as ET
 except ImportError:
@@ -45,29 +46,34 @@ class account_invoice(osv.Model):
             if invoice.type == 'out_refund':
                 invoice_type = '30'
 
+
             ET.SubElement(sale, "Customer_Prime").text = invoice.partner_id.reference
             ET.SubElement(sale, "CurrencyCode").text   = invoice.currency_id.name
             ET.SubElement(sale, "DocType").text        = invoice_type
             ET.SubElement(sale, "DocNumber").text      = ''.join(numbers)
-            ET.SubElement(sale, "DocDate").text        = invoice.date_invoice
-            ET.SubElement(sale, "DueDate").text        = invoice.date_due
+            ET.SubElement(sale, "DocDate").text        = datetime.datetime.strptime(invoice.date_invoice, "%Y-%m-%d").strftime("%d/%m/%Y")
+            ET.SubElement(sale, "DueDate").text        = datetime.datetime.strptime(invoice.date_due, "%Y-%m-%d").strftime("%d/%m/%Y")
             ET.SubElement(sale, "OurRef").text         = invoice.name
-            ET.SubElement(sale, "Amount").text         = str(invoice.amount_total)
+            ET.SubElement(sale, "Amount").text         = ('%.2f' % invoice.amount_total).replace('.',',')
             ET.SubElement(sale, "Status").text         = '0'
 
             details = ET.SubElement(sale, "Details")
             for line in invoice.move_id.line_id:
+
+                if line.account_id.code[:3] == '400':
+                    continue
+
                 detail = ET.SubElement(details, "Detail")
                 anal = ET.SubElement(detail, "Analytics1")
-                anal = ET.SubElement(anal, "Analytic1")
+                anal = ET.SubElement(anal, "Analytic")
 
                 if line.debit != 0:
-                    ET.SubElement(detail, "Amount").text  = str(line.debit)
-                    ET.SubElement(anal, "Amount").text    = str(line.debit)
+                    ET.SubElement(detail, "Amount").text  = ('%.2f' % line.debit).replace('.',',')
+                    ET.SubElement(anal, "Amount").text    = ('%.2f' % line.debit).replace('.',',')
                     ET.SubElement(detail, "DebCre").text  = '1'
                 else:
-                    ET.SubElement(detail, "Amount").text  = str(line.credit)
-                    ET.SubElement(anal, "Amount").text    = str(line.credit)
+                    ET.SubElement(detail, "Amount").text  = ('%.2f' % line.credit).replace('.',',')
+                    ET.SubElement(anal, "Amount").text    = ('%.2f' % line.credit).replace('.',',')
                     ET.SubElement(detail, "DebCre").text  = '-1'
 
                 ET.SubElement(detail, "Account").text = line.account_id.code
