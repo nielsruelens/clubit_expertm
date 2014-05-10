@@ -60,7 +60,7 @@ class account_invoice(osv.Model):
             details = ET.SubElement(sale, "Details")
             for line in invoice.move_id.line_id:
 
-                if line.account_id.code[:3] == '400':
+                if invoice.account_id.code == line.account_id.code:
                     continue
 
                 detail = ET.SubElement(details, "Detail")
