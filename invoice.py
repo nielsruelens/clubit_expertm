@@ -40,6 +40,7 @@ class account_invoice(osv.Model):
         sales = ET.SubElement(root, "Sales")
         for invoice in invoices:
             sale = ET.SubElement(sales, "Sale")
+            total_done = False
 
             numbers = re.findall('\d+', invoice.number)
             invoice_type = '10'
@@ -60,21 +61,29 @@ class account_invoice(osv.Model):
             details = ET.SubElement(sale, "Details")
             for line in invoice.move_id.line_id:
 
-                if invoice.account_id.code == line.account_id.code:
-                    continue
-
                 detail = ET.SubElement(details, "Detail")
                 anal = ET.SubElement(detail, "Analytics1")
                 anal = ET.SubElement(anal, "Analytic")
 
-                if line.debit != 0:
-                    ET.SubElement(detail, "Amount").text  = ('%.2f' % line.debit).replace('.',',')
-                    ET.SubElement(anal, "Amount").text    = ('%.2f' % line.debit).replace('.',',')
-                    ET.SubElement(detail, "DebCre").text  = '1'
+                if invoice.account_id.code == line.account_id.code and not total_done:
+
+                    total_done = True
+                    ET.SubElement(detail, "Amount").text  = ('%.2f' % invoice.amount_total).replace('.',',')
+                    ET.SubElement(anal, "Amount").text    = ('%.2f' % invoice.amount_total).replace('.',',')
+                    if invoice.type == 'out_refund':
+                        ET.SubElement(detail, "DebCre").text  = '-1'
+                    else:
+                        ET.SubElement(detail, "DebCre").text  = '1'
                 else:
-                    ET.SubElement(detail, "Amount").text  = ('%.2f' % line.credit).replace('.',',')
-                    ET.SubElement(anal, "Amount").text    = ('%.2f' % line.credit).replace('.',',')
-                    ET.SubElement(detail, "DebCre").text  = '-1'
+
+                    if line.debit != 0:
+                        ET.SubElement(detail, "Amount").text  = ('%.2f' % line.debit).replace('.',',')
+                        ET.SubElement(anal, "Amount").text    = ('%.2f' % line.debit).replace('.',',')
+                        ET.SubElement(detail, "DebCre").text  = '1'
+                    else:
+                        ET.SubElement(detail, "Amount").text  = ('%.2f' % line.credit).replace('.',',')
+                        ET.SubElement(anal, "Amount").text    = ('%.2f' % line.credit).replace('.',',')
+                        ET.SubElement(detail, "DebCre").text  = '-1'
 
                 ET.SubElement(detail, "Account").text = line.account_id.code
 
