@@ -61,11 +61,14 @@ class account_invoice(osv.Model):
             details = ET.SubElement(sale, "Details")
             for line in invoice.move_id.line_id:
 
+                if invoice.account_id.code == line.account_id.code and total_done:
+                    continue
+
                 detail = ET.SubElement(details, "Detail")
                 anal = ET.SubElement(detail, "Analytics1")
                 anal = ET.SubElement(anal, "Analytic")
 
-                if invoice.account_id.code == line.account_id.code and not total_done:
+                if invoice.account_id.code == line.account_id.code:
 
                     total_done = True
                     ET.SubElement(detail, "Amount").text  = ('%.2f' % invoice.amount_total).replace('.',',')
