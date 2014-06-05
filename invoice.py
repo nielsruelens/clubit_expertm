@@ -48,7 +48,11 @@ class account_invoice(osv.Model):
                 invoice_type = '30'
 
 
-            ET.SubElement(sale, "Customer_Prime").text = invoice.partner_id.reference
+            if invoice.partner_id.parent_id:
+                ET.SubElement(sale, "Customer_Prime").text = invoice.partner_id.parent_id.reference
+            else:
+                ET.SubElement(sale, "Customer_Prime").text = invoice.partner_id.reference
+
             ET.SubElement(sale, "CurrencyCode").text   = invoice.currency_id.name
             ET.SubElement(sale, "DocType").text        = invoice_type
             ET.SubElement(sale, "DocNumber").text      = ''.join(numbers)
@@ -93,6 +97,9 @@ class account_invoice(osv.Model):
                 if line.tax_code_id:
                     ET.SubElement(detail, "Ventil").text  = line.tax_code_id.ventil_code
                     ET.SubElement(detail, "VAT1").text    = line.tax_code_id.code
+                else:
+                    ET.SubElement(detail, "Ventil").text  = ''
+
 
 
         # Add the XML structure to the EDI document
