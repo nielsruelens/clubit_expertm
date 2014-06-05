@@ -98,7 +98,7 @@ class account_invoice(osv.Model):
                     ET.SubElement(detail, "Ventil").text  = line.tax_code_id.ventil_code
                     ET.SubElement(detail, "VAT1").text    = line.tax_code_id.code
                 else:
-                    ET.SubElement(detail, "Ventil").text  = ''
+                    ET.SubElement(detail, "Ventil").text  = '0'
 
 
 
